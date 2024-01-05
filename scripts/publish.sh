@@ -4,5 +4,5 @@ set -e
 
 npm run build
 cp package.json dist
-cd dist;
-npm publish --registry=http://0.0.0.0:4873/
+cd dist
+npm publish
