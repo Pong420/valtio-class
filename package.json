@@ -4,6 +4,15 @@
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pong420/valtio-class"
+  },
+  "keywords": [
+    "valtio"
+  ],
+  "author": "Pong420",
+  "license": "MIT",
   "scripts": {
     "build": "vite build",
     "test": "vitest"
