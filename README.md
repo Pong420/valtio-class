@@ -4,6 +4,10 @@ Utility class for [valtio](https://github.com/pmndrs/valtio)
 
 ## Usage
 
+```bash
+npm install valtio-class
+```
+
 ```tsx
 class Counter extends ValtioClas {
   count = 0;
