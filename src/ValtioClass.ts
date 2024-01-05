@@ -59,16 +59,16 @@ export class ValtioClass {
   }
 
   /**
-   * Advanced subscribe function, for array or object properties
-   * when subscribe an array or object
+   * Advanced subscribe function, for an array or object properties
+   * When subscribing to an array or object
    * ```
    * subscribe(this.arr, callback)
    * ```
-   * callback won't be triggered by creating a new array. Also the old subscription will no longer work.
+   * callback won't be triggered by creating a new array. Also, the old subscription will no longer work.
    * ```
    * this.arr = []
    * ```
-   * The function will subscribe the change of the object.
+   * The function will subscribe to the change of the object.
    * If the object is redefined, the callback of subscribeKey will resubscribe the object again
    */
   subscribe<K extends keyof this>(
