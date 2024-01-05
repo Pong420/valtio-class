@@ -80,3 +80,9 @@ this.arr = []
 The function will subscribe to the change of the object.
 
 If the object is redefined, the callback of subscribeKey will resubscribe the object again
+
+## assign
+
+```
+Object.assign(state, newProps)
+```

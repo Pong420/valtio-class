@@ -1,6 +1,6 @@
 import { proxy, ref, useSnapshot, subscribe } from 'valtio';
 import { derive, subscribeKey } from 'valtio/utils';
-import { DeriveGet, DerivedFn, DerivedFns, Functions } from './types';
+import { DeriveGet, DerivedFn, DerivedFns, Functions, ObjectKey } from './types';
 
 /**
  * Utility class for valtio with advanced function
@@ -25,7 +25,6 @@ export class ValtioClass {
 
     // eslint-disable-next-line valtio/avoid-this-in-proxy
     const proxyObject = proxy(this);
-    const functions = getFunctions(proxyObject);
     Object.assign(proxyObject, getFunctions(proxyObject));
 
     return [
@@ -71,7 +70,7 @@ export class ValtioClass {
    * The function will subscribe to the change of the object.
    * If the object is redefined, the callback of subscribeKey will resubscribe the object again
    */
-  subscribe<K extends keyof this>(
+  subscribe<K extends ObjectKey<this>>(
     key: K,
     callback: (data: this[K]) => void,
     options?: Parameters<typeof subscribe>[2]
@@ -87,6 +86,10 @@ export class ValtioClass {
       return unsubscribeAll;
     };
     return main();
+  }
+
+  assign(props: object) {
+    return Object.assign(this, props);
   }
 
   reset(data?: object) {
