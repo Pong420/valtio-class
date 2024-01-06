@@ -1,2 +1,2 @@
 export * from './ValtioClass';
-export * from './types';
+export type * from './types';
