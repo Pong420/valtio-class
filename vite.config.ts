@@ -20,7 +20,7 @@ export default defineConfig({
         format,
         entryFileNames: `[name].${format === 'es' ? 'js' : 'cjs'}`
       })),
-      external: [/node_modules/]
+      external: [/node_modules/, 'valtio', /valtio\/.*/]
     }
   }
 });
