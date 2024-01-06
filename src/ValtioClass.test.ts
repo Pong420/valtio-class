@@ -80,6 +80,7 @@ test('advanced subscribe', async () => {
 
   adv.props = [];
   await delay();
+  // expected callback wont' be called
   expect(fn).toBeCalledTimes(2);
 
   adv.props.push(0);
@@ -88,6 +89,7 @@ test('advanced subscribe', async () => {
 
   adv.props = [];
   await delay();
+  // expected callback wont' be called
   expect(fn).toBeCalledTimes(3);
 
   adv.props.push(0);
