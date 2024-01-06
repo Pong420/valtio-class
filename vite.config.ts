@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 const formats = ['es'] as const;
 
 export default defineConfig({
-  plugins: [dts()],
+  plugins: [dts({ exclude: ['**/*.test.ts'] })],
   build: {
     target: 'esnext',
     sourcemap: true,

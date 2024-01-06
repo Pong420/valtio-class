@@ -30,7 +30,7 @@ export class ValtioClass {
     return [
       //
       proxyObject,
-      <T extends this>(o?: T) => useSnapshot((o || proxyObject) as T)
+      <T extends this>(o?: T) => useSnapshot((o || proxyObject) as T) as T
     ] as const;
   }
 
