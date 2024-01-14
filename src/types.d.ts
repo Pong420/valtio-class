@@ -3,8 +3,8 @@ import type { subscribe } from 'valtio';
 export type DeriveGet = <T extends object>(proxyObject: T) => T;
 export type DerivedFn<ProxyObject, Return> = (get: DeriveGet, proxyObject: ProxyObject) => Return;
 export type DerivedFns<U extends object, ProxyObject> = { [K in keyof U]: DerivedFn<ProxyObject, U[K]> };
-type SubscribeParams = Parameters<typeof subscribe>;
-type Path = (string | symbol)[];
+export type SubscribeParams = Parameters<typeof subscribe>;
+export type Path = (string | symbol)[];
 export type Op =
   | [op: 'set', path: Path, value: unknown, prevValue: unknown]
   | [op: 'delete', path: Path, prevValue: unknown]

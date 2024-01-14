@@ -41,6 +41,12 @@ Sometimes you may want the initial props typed. You can
 class State extends ValtioClass {
   __initialProps: Data = {};
 }
+
+// reset all values to initial
+state.reset();
+
+// override the reset values
+state.reset({ ... });
 ```
 
 ### derive
@@ -67,14 +73,14 @@ export const [sum, useSum] = new Sum().derive({
 Advanced subscribe function, for an array or object properties
 When subscribing to an array or object
 
-```
-subscribe(this.arr, callback)
+```ts
+subscribe(this.arr, callback);
 ```
 
 callback won't be triggered by creating a new array. Also, the old subscription will no longer work.
 
-```
-this.arr = []
+```ts
+this.arr = [];
 ```
 
 The function will subscribe to the change of the object.
@@ -83,6 +89,14 @@ If the object is redefined, the callback of subscribeKey will resubscribe the ob
 
 ## assign
 
+```ts
+state.assign(newProps);
+// same as
+Object.assign(state, newProps);
 ```
-Object.assign(state, newProps)
+
+## hasPath
+
+```ts
+this.subscribe('arr', (values, op) => !this.hasPath(op, 'length') && callback(values), true);
 ```
