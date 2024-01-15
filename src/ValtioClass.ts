@@ -136,14 +136,12 @@ export class ValtioClass {
  *
  * ```
  * // use
- * const bet = useSnapshot(betContext);
- * bet.setChip(100);
+ * const state = useSnapshot(_state);
+ * state.setChip(100);
  *
  * // assign to component prop without bind
  * ```
- * <ChipSelector
- *   setCurChipValue={bet.setChip}
- * >
+ * <button onClick={state.action} />
  * ```
  */
 export function getFunctions<T extends object>(proxyObject: T) {
