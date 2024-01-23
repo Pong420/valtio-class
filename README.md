@@ -32,20 +32,29 @@ function CounterComponent() {
 
 ### init() / reset()
 
-The `init()` function will scan all the props of the instance and save in `__initialProps` property.
-The values will be used when `reset()` is called
+The `init()` function will scan all the props of the instance and save them in the `__initialProps` property.
+These values will be used when `reset()` is called.
 
-Sometimes you may want the initial props typed. You can
+Note, for any objects or arrays may not work as you expected. See below subscribe API for more details
 
 ```ts
 class State extends ValtioClass {
-  __initialProps: Data = {};
+ // define the initial value of the property directly
+  prop = '';
+
+  // if the property could be undefined, you must set the initial value to null
+  data: Recrod<string, string> | null = null;
+
+  // define properties with type definition, so you won't missed some field
+  __initialProps: Props = {
+    prop2: ''
+  };
 }
 
 // reset all values to initial
 state.reset();
 
-// override the reset values
+// override the initial values
 state.reset({ ... });
 ```
 
@@ -68,7 +77,16 @@ export const [sum, useSum] = new Sum().derive({
 });
 ```
 
-## subscribe
+You may needs `underive` for HMR
+```ts
+if (module.hot) {
+  module.hot.dispose(() => {
+    underive(Sum);
+  });
+}
+```
+
+### subscribe
 
 Advanced subscribe function, for an array or object properties
 When subscribing to an array or object
@@ -83,11 +101,9 @@ callback won't be triggered by creating a new array. Also, the old subscription 
 this.arr = [];
 ```
 
-The function will subscribe to the change of the object.
+With this function, if the object is redefined, the callback of `subscribeKey` will resubscribe the object again.
 
-If the object is redefined, the callback of subscribeKey will resubscribe the object again
-
-## assign
+### assign
 
 ```ts
 state.assign(newProps);
@@ -95,7 +111,9 @@ state.assign(newProps);
 Object.assign(state, newProps);
 ```
 
-## hasPath
+### hasPath
+
+function to check if the `Op` contains some path. It is designed for notification is sync
 
 ```ts
 this.subscribe('arr', (values, op) => !this.hasPath(op, 'length') && callback(values), true);
