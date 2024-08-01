@@ -1,12 +1,16 @@
 import util from 'util';
 import { proxy, snapshot, subscribe } from 'valtio';
 import { expect, test, vi } from 'vitest';
+import { renderHook } from '@testing-library/react';
 import { ValtioClass, getFunctions, getValtioClassProperties } from './ValtioClass';
 
 const delay = (n = 0) => new Promise(resolve => setTimeout(resolve, n));
 
 class State extends ValtioClass {
   protected _value = 0;
+  object = {
+    a: 0
+  };
   value(value?: number) {
     if (typeof value === 'undefined') return this._value;
     this._value = value;
@@ -21,6 +25,10 @@ class State2 extends State {
   }
 }
 
+/**
+ * @vitest-environment happy-dom
+ */
+
 test('reset initial value', async () => {
   // const initialValue = Math.random();
   const newValue = Math.random();
@@ -31,6 +39,7 @@ test('reset initial value', async () => {
   const unsubscribe = subscribe(state, fn);
 
   state.value(newValue);
+  state.object.a = 1;
 
   await delay();
   expect(fn).toBeCalledTimes(1);
@@ -41,6 +50,7 @@ test('reset initial value', async () => {
   state.reset();
   expect(state.value()).toBe(0);
   expect(snapshot(state).value()).toBe(0);
+  expect(state.object.a).toBe(0);
 
   unsubscribe();
 });
@@ -99,4 +109,26 @@ test('advanced subscribe', async () => {
   backup.push(0);
   await delay();
   expect(fn).toBeCalledTimes(4);
+});
+
+test('hooks', async () => {
+  const [state, useState] = new State().init();
+  const { result, rerender } = renderHook(() => useState());
+  expect(result.current).toEqual(state);
+
+  state.value(2);
+  rerender();
+  expect(result.current).toHaveProperty('_value', 2);
+  expect(result.current).toEqual(state);
+});
+
+test('hooks with neset value', async () => {
+  const [state, useState] = new State().init();
+  const { result, rerender } = renderHook(() => useState(state.object));
+  expect(result.current).toEqual(state.object);
+
+  state.object.a = 2
+  rerender();
+  expect(result.current).toHaveProperty('a', 2);
+  expect(result.current).toEqual(state.object);
 });

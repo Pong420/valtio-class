@@ -21,17 +21,16 @@ export class ValtioClass {
   init() {
     const { __initialProps, ...props } = this;
 
-    this.__initialProps = ref(Object.assign({}, __initialProps, props));
+    this.__initialProps = ref({ ...JSON.parse(JSON.stringify(__initialProps)), ...props });
 
     // eslint-disable-next-line valtio/avoid-this-in-proxy
     const proxyObject = proxy(this);
     Object.assign(proxyObject, getFunctions(proxyObject));
 
     return [
-      //
       proxyObject,
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      <T extends this>(o?: T) => useSnapshot((o || proxyObject) as T) as T
+      <T = this>(o?: T) => useSnapshot(o ?? proxyObject) as T
     ] as const;
   }
 
@@ -105,7 +104,7 @@ export class ValtioClass {
   }
 
   reset(data?: object) {
-    Object.assign(this, this.__initialProps, data);
+    Object.assign(this, JSON.parse(JSON.stringify(this.__initialProps)), data);
   }
 }
 
