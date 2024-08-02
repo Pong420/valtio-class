@@ -1,3 +1,4 @@
+import { stringify, parse } from 'devalue';
 import { proxy, ref, useSnapshot, subscribe } from 'valtio';
 import { derive, subscribeKey } from 'valtio/utils';
 import { DeriveGet, DerivedFn, DerivedFns, Functions, ObjectKey, Op, SubscribeOptions } from './types';
@@ -13,7 +14,7 @@ export class ValtioClass {
    *  }
    * }
    */
-  protected __initialProps: unknown = {};
+  protected __initialProps: object = {};
 
   /**
    * function return correct proxy object and hook
@@ -21,7 +22,7 @@ export class ValtioClass {
   init() {
     const { __initialProps, ...props } = this;
 
-    this.__initialProps = ref({ ...JSON.parse(JSON.stringify(__initialProps)), ...props });
+    this.__initialProps = ref(parse(stringify(Object.assign({}, __initialProps, props))));
 
     // eslint-disable-next-line valtio/avoid-this-in-proxy
     const proxyObject = proxy(this);
@@ -104,7 +105,7 @@ export class ValtioClass {
   }
 
   reset(data?: object) {
-    Object.assign(this, JSON.parse(JSON.stringify(this.__initialProps)), data);
+    Object.assign(this, this.__initialProps, data);
   }
 }
 
