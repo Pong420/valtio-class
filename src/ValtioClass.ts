@@ -1,4 +1,3 @@
-import { stringify, parse } from 'devalue';
 import { proxy, ref, useSnapshot, subscribe } from 'valtio';
 import { derive, subscribeKey } from 'valtio/utils';
 import { DeriveGet, DerivedFn, DerivedFns, Functions, ObjectKey, Op, SubscribeOptions } from './types';
@@ -22,7 +21,7 @@ export class ValtioClass {
   init() {
     const { __initialProps, ...props } = this;
 
-    this.__initialProps = ref(parse(stringify(Object.assign({}, __initialProps, props))));
+    this.__initialProps = ref(Object.assign({}, __initialProps, props));
 
     // eslint-disable-next-line valtio/avoid-this-in-proxy
     const proxyObject = proxy(this);
