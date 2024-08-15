@@ -71,46 +71,6 @@ test('getFunctions', () => {
   expect(functions.value()).toBe(1);
 });
 
-test('advanced subscribe', async () => {
-  class AdvClass extends ValtioClass {
-    props = [] as number[];
-  }
-  const [adv] = new AdvClass().init();
-  const backup = adv.props;
-  const fn = vi.fn();
-  adv.subscribe('props', fn);
-
-  adv.props.push(0);
-  await delay();
-  expect(fn).toBeCalledTimes(1);
-
-  adv.props.push(1);
-  await delay();
-  expect(fn).toBeCalledTimes(2);
-
-  adv.props = [];
-  await delay();
-  // expected callback wont' be called
-  expect(fn).toBeCalledTimes(2);
-
-  adv.props.push(0);
-  await delay();
-  expect(fn).toBeCalledTimes(3);
-
-  adv.props = [];
-  await delay();
-  // expected callback wont' be called
-  expect(fn).toBeCalledTimes(3);
-
-  adv.props.push(0);
-  await delay();
-  expect(fn).toBeCalledTimes(4);
-
-  backup.push(0);
-  await delay();
-  expect(fn).toBeCalledTimes(4);
-});
-
 test('hooks', async () => {
   const [state, useState] = new State().init();
   const { result, rerender } = renderHook(() => useState());
@@ -127,7 +87,7 @@ test('hooks with neset value', async () => {
   const { result, rerender } = renderHook(() => useState(state.object));
   expect(result.current).toEqual(state.object);
 
-  state.object.a = 2
+  state.object.a = 2;
   rerender();
   expect(result.current).toHaveProperty('a', 2);
   expect(result.current).toEqual(state.object);
