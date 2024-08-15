@@ -1,6 +1,6 @@
 import { proxyWithHistory } from 'valtio-history';
 import { ref, useSnapshot } from 'valtio';
-import { getFunctions, ValtioClass } from './ValtioClass';
+import { getFunctions, getValtioClassProperties, ValtioClass } from './ValtioClass';
 import { deepClone } from './utils';
 
 export class ValtioHistoryClass extends ValtioClass {
@@ -10,14 +10,15 @@ export class ValtioHistoryClass extends ValtioClass {
     this.__initialProps = ref(deepClone(Object.assign({}, __initialProps, props)));
 
     const proxyObject = proxyWithHistory(this);
-    const fns = getFunctions(proxyObject.value);
-    Object.assign(proxyObject.value, fns);
+    Object.assign(proxyObject.value, getFunctions(proxyObject.value));
     proxyObject.saveHistory();
 
     const state = {} as this;
-    // const _proxyObject = {} as { value: this };
 
-    for (const k in proxyObject.value) {
+    for (const k of getValtioClassProperties(proxyObject.value)) {
+      const key = k as keyof typeof proxyObject.value;
+      if (state[key]) continue;
+
       Object.defineProperty(state, k, {
         // https://stackoverflow.com/questions/17893718/what-does-enumerable-mean
         enumerable: true,
@@ -25,10 +26,10 @@ export class ValtioHistoryClass extends ValtioClass {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#configurable
         configurable: true,
         get() {
-          return proxyObject.value[k];
+          return proxyObject.value[key];
         },
         set(_value) {
-          proxyObject.value[k] = _value;
+          proxyObject.value[key] = _value;
         }
       });
     }
