@@ -24,6 +24,10 @@ class State extends ValtioHistoryClass {
 test('ValtioHistoryClass', () => {
   const [state, history] = new State().withHistory();
 
+  expect(state.reset).toBeDefined();
+  expect(state.assign).toBeDefined();
+  expect(state.hasPath).toBeDefined();
+
   expect(state.count).toBe(0);
   state.count = 1;
   expect(state.count).toBe(1);

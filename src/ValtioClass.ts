@@ -100,10 +100,10 @@ export function getFunctions<T extends object>(proxyObject: T) {
   return context as Functions<T>;
 }
 
-const classProps = Object.getOwnPropertyNames(ValtioClass.prototype);
+export const basicClassProps = Object.getOwnPropertyNames(ValtioClass.prototype);
 
 export function getValtioClassProperties<T extends object>(obj: T): string[] {
-  return getAllProperties(obj).filter(prop => !/^(__|constructor)/.test(prop) && !classProps.includes(prop));
+  return getAllProperties(obj).filter(prop => !/^(__|constructor)/.test(prop) && !basicClassProps.includes(prop));
 }
 
 function getAllProperties(obj: object): string[] {

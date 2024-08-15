@@ -1,6 +1,6 @@
 import { proxyWithHistory } from 'valtio-history';
 import { ref, useSnapshot } from 'valtio';
-import { getFunctions, getValtioClassProperties, ValtioClass } from './ValtioClass';
+import { basicClassProps, getFunctions, getValtioClassProperties, ValtioClass } from './ValtioClass';
 import { deepClone } from './utils';
 
 export class ValtioHistoryClass extends ValtioClass {
@@ -10,12 +10,14 @@ export class ValtioHistoryClass extends ValtioClass {
     this.__initialProps = ref(deepClone(Object.assign({}, __initialProps, props)));
 
     const proxyObject = proxyWithHistory(this);
-    Object.assign(proxyObject.value, getFunctions(proxyObject.value));
+    const fns = getFunctions(proxyObject.value);
+    Object.assign(proxyObject.value, fns);
     proxyObject.saveHistory();
 
     const state = {} as this;
+    const classProps = [...getValtioClassProperties(proxyObject.value), ...basicClassProps];
 
-    for (const k of getValtioClassProperties(proxyObject.value)) {
+    for (const k of classProps) {
       const key = k as keyof typeof proxyObject.value;
       if (state[key]) continue;
 
