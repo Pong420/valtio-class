@@ -4,17 +4,18 @@ import { getFunctions, ValtioClass } from './ValtioClass';
 import { deepClone } from './utils';
 
 export class ValtioHistoryClass extends ValtioClass {
-  withHistory() {
+  withHistory(): [this, ReturnType<typeof proxyWithHistory<this>>, <T = this>(o?: T) => T] {
     const { __initialProps, ...props } = this;
 
     this.__initialProps = ref(deepClone(Object.assign({}, __initialProps, props)));
 
-    const proxyObject = proxyWithHistory(this, {});
+    const proxyObject = proxyWithHistory(this);
     const fns = getFunctions(proxyObject.value);
     Object.assign(proxyObject.value, fns);
     proxyObject.saveHistory();
 
-    const state = {} as typeof proxyObject.value;
+    const state = {} as this;
+    // const _proxyObject = {} as { value: this };
 
     for (const k in proxyObject.value) {
       Object.defineProperty(state, k, {
