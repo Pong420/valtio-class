@@ -3,10 +3,14 @@ import { derive as _derive, subscribeKey } from 'valtio/utils';
 import { DeriveGet, DerivedFn, DerivedFns, ObjectKey, Op, SubscribeOptions } from './types';
 import { ValtioClass } from './ValtioClass';
 
-const isObject = (value: unknown): value is object => !!value && typeof value === 'object';
+export function isPlainObject(value: unknown): value is object {
+  if (typeof value !== 'object' || value === null) return false;
+  let proto = Object.getPrototypeOf(value);
+  return proto === null || proto === Object.prototype;
+}
 
 export const deepClone = <T>(value: T): T => {
-  if (!isObject(value)) {
+  if (!isPlainObject(value)) {
     return value;
   }
   const baseObject: T = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value));
