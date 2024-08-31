@@ -92,3 +92,12 @@ test('hooks with neset value', async () => {
   expect(result.current).toHaveProperty('a', 2);
   expect(result.current).toEqual(state.object);
 });
+
+test('subscribe', async () => {
+  const [state] = new State().init();
+  const callback = vi.fn();
+  subscribe(state, callback);
+  state.value(2);
+  await delay();
+  expect(callback).toBeCalledTimes(1);
+});
