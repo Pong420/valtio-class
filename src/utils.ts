@@ -1,5 +1,6 @@
 import { useSnapshot, subscribe as _subscribe } from 'valtio';
-import { derive as _derive, subscribeKey } from 'valtio/utils';
+import { subscribeKey } from 'valtio/utils';
+import { derive as _derive } from 'derive-valtio';
 import { DeriveGet, DerivedFn, DerivedFns, ObjectKey, Op, SubscribeOptions } from './types';
 import { ValtioClass } from './ValtioClass';
 
