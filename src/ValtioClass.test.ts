@@ -13,6 +13,7 @@ class State extends ValtioClass {
   object = {
     a: 0
   };
+  array: any[] = [{ n: 1 }];
   value(value?: number) {
     if (typeof value === 'undefined') return this._value;
     this._value = value;
@@ -42,22 +43,29 @@ test('reset initial value', async () => {
 
   state.value(newValue);
   state.object.a = 1;
+  state.array.push(1);
 
   await delay();
   expect(fn).toBeCalledTimes(1);
 
   expect(state.value()).toBe(newValue);
   expect(snapshot(state).value()).toBe(newValue);
+  expect(state.array).toEqual([{ n: 1 }, 1]);
+  expect(state['__initialProps']['array']).toEqual([{ n: 1 }]);
 
   state.reset();
   expect(state.value()).toBe(0);
   expect(snapshot(state).value()).toBe(0);
   expect(state.object.a).toBe(0);
+  expect(state.array).toEqual([{ n: 1 }]);
   expect(state['__initialProps']['object']['a']).toBe(0);
+  expect(state['__initialProps']['array']).toEqual([{ n: 1 }]);
 
   state.value(newValue);
   state.object.a = 1;
+  state.array.push(2);
   expect(state['__initialProps']['object']['a']).toBe(0);
+  expect(state['__initialProps']['array']).toEqual([{ n: 1 }]);
 
   await delay();
   expect(fn).toBeCalledTimes(2);

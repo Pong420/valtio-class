@@ -11,14 +11,17 @@ export function isPlainObject(value: unknown): value is object {
 }
 
 export const deepClone = <T>(value: T): T => {
-  if (!isPlainObject(value)) {
-    return value;
+  if (Array.isArray(value)) return value.map(o => deepClone(o)) as T;
+
+  if (isPlainObject(value)) {
+    const baseObject = Object.create(Object.getPrototypeOf(value));
+    Reflect.ownKeys(value).forEach(key => {
+      baseObject[key as keyof T] = deepClone(value[key as keyof T]);
+    });
+    return baseObject;
   }
-  const baseObject: T = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value));
-  Reflect.ownKeys(value).forEach(key => {
-    baseObject[key as keyof T] = deepClone(value[key as keyof T]);
-  });
-  return baseObject;
+
+  return value;
 };
 
 /**
