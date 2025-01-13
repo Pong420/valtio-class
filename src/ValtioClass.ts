@@ -47,7 +47,7 @@ export class ValtioClass {
   }
 
   reset(data?: object) {
-    Object.assign(this, this.__initialProps, data);
+    Object.assign(this, deepClone(this.__initialProps), data);
   }
 }
 

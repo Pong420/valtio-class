@@ -7,6 +7,8 @@ import { ValtioClass, getFunctions, getValtioClassProperties } from './ValtioCla
 const delay = (n = 0) => new Promise(resolve => setTimeout(resolve, n));
 
 class State extends ValtioClass {
+  protected declare __initialProps: State;
+
   protected _value = 0;
   object = {
     a: 0
@@ -51,6 +53,18 @@ test('reset initial value', async () => {
   expect(state.value()).toBe(0);
   expect(snapshot(state).value()).toBe(0);
   expect(state.object.a).toBe(0);
+  expect(state['__initialProps']['object']['a']).toBe(0);
+
+  state.value(newValue);
+  state.object.a = 1;
+  expect(state['__initialProps']['object']['a']).toBe(0);
+
+  await delay();
+  expect(fn).toBeCalledTimes(2);
+
+  state.reset();
+  expect(state.object.a).toBe(0);
+  expect(state['__initialProps']['object']['a']).toBe(0);
 
   unsubscribe();
 });
